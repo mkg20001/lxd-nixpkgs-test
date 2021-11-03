@@ -4,7 +4,7 @@ with lib;
 
 {
   # useful debug tools
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
     htop
     strace
     tree
