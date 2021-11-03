@@ -1,6 +1,6 @@
 # lxd-nixpkgs-test
 
-Tiny script to help you test nixpkgs (requires lxd installed)
+Tiny script to help you test nixpkgs changes (requires lxd installed)
 
 # Installation
 
