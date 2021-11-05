@@ -129,6 +129,22 @@ if [ ! -e "$CONFIG/config" ] && [ "$1" != "init" ]; then
   exit 1
 fi
 
+cmd_e() {
+  cmd_enter "$@"
+}
+
+cmd_i() {
+  cmd_init "$@"
+}
+
+cmd_c() {
+  cmd_create "$@"
+}
+
+cmd_update() {
+  cmd_update "$@"
+}
+
 . "$CONFIG/config"
 
 if [ -n "$(LC_ALL=C type -t cmd_$1)" ] && [ "$(LC_ALL=C type -t cmd_$1)" = function ]; then
