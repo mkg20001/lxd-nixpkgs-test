@@ -1,0 +1,17 @@
+Commands:
+  init <location-of-nixpkgs>                      Initialize lxd-nixpkgs-test
+  create <worktree>                               Create container for this worktree
+  enter <worktree> --[no-]-create --[no-]-rebuild Enter a container, creates it if it doesn't exist
+  rebuild <worktree>                              Rebuild a container
+  update                                          Update nixos image from hydra
+  help                                            Print this help page
+
+Helpful tips:
+  Configuration from #SHAREDLOC#
+  gets automatically imported into all containers.
+  Tweak it to your needs
+
+  Old containers can be deleted with "lxc delete -f WORKTREE"
+  You can see the whole list with "lxc ls"
+
+  Run "lnt update" from time to time
