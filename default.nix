@@ -7,8 +7,8 @@ stdenv.mkDerivation {
   src = ./.;
 
   installPhase = ''
-    sed "s|SELF=.*|SELF=$out|g" -i nixpkgs-container.sh
-    install -D nixpkgs-container.sh $out/bin/lxd-nixpkgs-test
+    sed "s|SELF=.*|SELF=$out|g" -i lxd-nixpkgs-test.sh
+    install -D lxd-nixpkgs-test.sh $out/bin/lxd-nixpkgs-test
     cp -r shared inside help.txt $out
     ln -s $out/bin/lxd-nixpkgs-test $out/bin/lnt
   '';
