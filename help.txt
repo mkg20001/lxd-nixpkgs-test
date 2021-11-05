@@ -2,6 +2,7 @@ Commands:
   init <location-of-nixpkgs>                      Initialize lxd-nixpkgs-test
   create <worktree>                               Create container for this worktree
   enter <worktree> --[no-]-create --[no-]-rebuild Enter a container, creates it if it doesn't exist
+  edit-shared                                     Edit shared config
   rebuild <worktree>                              Rebuild a container
   update                                          Update nixos image from hydra
   help                                            Print this help page

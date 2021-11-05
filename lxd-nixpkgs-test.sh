@@ -119,6 +119,10 @@ cmd_help() {
   cat "$SELF/help.txt" | sed "s|#SHAREDLOC#|$CONFIG/shared|g"
 }
 
+cmd_edit-shared() {
+  "${EDITOR:+nano}" "$CONFIG/shared/default.nix"
+}
+
 if [ $# -lt 1 ]; then
   cmd_help
   exit 2
