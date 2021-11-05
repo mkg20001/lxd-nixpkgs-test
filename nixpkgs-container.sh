@@ -1,6 +1,11 @@
 #!/bin/sh
 
-set -euxo pipefail
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <worktree>" >&2
+  exit 2
+fi
 
 if lxc info "$1" 2>/dev/null >/dev/null; then
   # already created, just enter it
