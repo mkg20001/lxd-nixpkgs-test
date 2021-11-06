@@ -145,7 +145,7 @@ cmd_c() {
   cmd_create "$@"
 }
 
-cmd_update() {
+cmd_u() {
   cmd_update "$@"
 }
 
