@@ -5,8 +5,28 @@ set -euo pipefail
 CONFIG="$HOME/.config/lxd-nixpkgs-test"
 SELF=$(dirname "$(readlink -f "$0")")
 
-cmd_create() {
+exists() {
   if lxc info "$1" 2>/dev/null >/dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+die() {
+  echo "ERROR: $*" >&2
+}
+
+running() {
+  if lxc info "$1" | grep "Status: RUNNING" 2>/dev/null >/dev/null; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+cmd_create() {
+  if exists "$1"; then
     # already created
     return 0
   fi
@@ -15,7 +35,7 @@ cmd_create() {
 
   lxc launch nixos "$1" -c security.nesting=true
   lxc config device add "$1" nixpkgs disk "source=$PRP" "path=/nix/var/nix/profiles/per-user/root/channels/nixpkgs"
-  test -d "$PRP/config" || (cp -r "$SELF/inside" "$PRP/config")
+  test -d "$PRP/config" || (cp -r "$SELF/inside" "$PRP/config" && chmod +w -R "$PRP/config")
   lxc config device add "$1" shared disk "source=$CONFIG/shared" "path=/etc/nixos/shared"
   lxc config device add "$1" config disk "source=$PRP/config" "path=/etc/nixos/config"
   lxc exec "$1" -- /run/current-system/sw/bin/sed "s|./lxd.nix|./lxd.nix ./config ./shared|g" -i /etc/nixos/configuration.nix
@@ -59,6 +79,15 @@ cmd_enter() {
 
   if $CREATE; then
     cmd_create "$C"
+  fi
+
+  if ! exists "$C"; then
+    die "Container does not exist"
+  fi
+
+  if ! running "$C"; then
+    lxc start "$C"
+    sleep 3s
   fi
 
   if $REBUILD; then
