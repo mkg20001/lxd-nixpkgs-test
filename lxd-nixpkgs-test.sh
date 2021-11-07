@@ -178,7 +178,9 @@ cmd_u() {
   cmd_update "$@"
 }
 
-. "$CONFIG/config"
+if [ -e "$CONFIG/config" ]; then
+  . "$CONFIG/config"
+fi
 
 if [ -n "$(LC_ALL=C type -t cmd_$1)" ] && [ "$(LC_ALL=C type -t cmd_$1)" = function ]; then
   CMD="$1"
