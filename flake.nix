@@ -9,9 +9,9 @@
     in
 
     {
-      overlay = (final: prev: {
+      overlay = final: prev: {
         lxd-nixpkgs-test = prev.callPackage ./. {};
-      });
+      };
 
       defaultPackage = forAllSystems (system: (import nixpkgs {
         inherit system;
