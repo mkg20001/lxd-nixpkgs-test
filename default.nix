@@ -1,4 +1,4 @@
-with (import <nixpkgs> {});
+{ stdenv }:
 
 stdenv.mkDerivation {
   pname = "lxd-nixpkgs-test";
