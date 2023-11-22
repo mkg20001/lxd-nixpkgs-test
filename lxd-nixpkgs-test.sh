@@ -40,7 +40,7 @@ cmd_create() {
   lxc config device add "$1" config disk "source=$PRP/config" "path=/etc/nixos/config"
   sleep 3s # allow it to boot
   lxc exec "$1" -- /run/current-system/sw/bin/sed "s|./lxd.nix|./lxd.nix ./config ./shared|g" -i /etc/nixos/configuration.nix
-  lxc exec "$1" -- /run/current-system/sw/bin/sed "s|  system.stateVersion|  virtualisation.lxc.nestedContainer = true;\n  system.stateVersion|" -i configuration.nix
+  lxc exec "$1" -- /run/current-system/sw/bin/sed "s|  system.stateVersion|  virtualisation.lxc.nestedContainer = true;\n  system.stateVersion|" -i /etc/nixos/configuration.nix
 }
 
 cmd_rebuild() {
