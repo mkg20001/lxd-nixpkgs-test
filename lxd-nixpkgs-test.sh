@@ -139,8 +139,8 @@ cmd_update() {
 
   pushd "$TMP"
 
-  dl lxdImage image.tar.xz
-  dl lxdMeta meta.tar.xz
+  dl lxdContainerImage image.tar.xz
+  dl lxdContainerMeta meta.tar.xz
 
   lxc image import meta.tar.xz image.tar.xz --alias nixos
 }
