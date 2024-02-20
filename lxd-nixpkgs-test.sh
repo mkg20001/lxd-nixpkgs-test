@@ -6,7 +6,7 @@ CONFIG="$HOME/.config/lxd-nixpkgs-test"
 SELF=$(dirname "$(readlink -f "$0")")
 
 exists() {
-  if lxc info "$1" 2>/dev/null >/dev/null; then
+  if incus info "$1" 2>/dev/null >/dev/null; then
     return 0
   else
     return 1
@@ -18,7 +18,7 @@ die() {
 }
 
 running() {
-  if lxc info "$1" | grep "Status: RUNNING" 2>/dev/null >/dev/null; then
+  if incus info "$1" | grep "Status: RUNNING" 2>/dev/null >/dev/null; then
     return 0
   else
     return 1
@@ -33,18 +33,17 @@ cmd_create() {
 
   PRP="$NIXPKGS/$1"
 
-  lxc launch images:nixos/unstable "$1" -c security.nesting=true
-  lxc config device add "$1" nixpkgs disk "source=$PRP" "path=/nix/var/nix/profiles/per-user/root/channels/nixpkgs"
+  incus launch images:nixos/unstable "$1" -c security.nesting=true
+  incus config device add "$1" nixpkgs disk "source=$PRP" "path=/nix/var/nix/profiles/per-user/root/channels/nixpkgs"
   test -d "$PRP/config" || (cp -r "$SELF/inside" "$PRP/config" && chmod +w -R "$PRP/config")
-  lxc config device add "$1" shared disk "source=$CONFIG/shared" "path=/etc/nixos/shared"
-  lxc config device add "$1" config disk "source=$PRP/config" "path=/etc/nixos/config"
+  incus config device add "$1" shared disk "source=$CONFIG/shared" "path=/etc/nixos/shared"
+  incus config device add "$1" config disk "source=$PRP/config" "path=/etc/nixos/config"
   sleep 3s # allow it to boot
-  lxc exec "$1" -- /run/current-system/sw/bin/sed "s|./lxd.nix|./lxd.nix ./config ./shared|g" -i /etc/nixos/configuration.nix
-  lxc exec "$1" -- /run/current-system/sw/bin/sed "s|  system.stateVersion|  virtualisation.lxc.nestedContainer = true;\n  system.stateVersion|" -i /etc/nixos/configuration.nix
+  incus exec "$1" -- /run/current-system/sw/bin/sed "s|./lxd.nix|./lxd.nix ./config ./shared|g" -i /etc/nixos/configuration.nix
 }
 
 cmd_rebuild() {
-  lxc exec "$1" -- /bin/sh -l -c "nixos-rebuild switch -k"
+  incus exec "$1" -- /bin/sh -l -c "nixos-rebuild switch -k"
 }
 
 cmd_enter() {
@@ -86,7 +85,7 @@ cmd_enter() {
   fi
 
   if ! running "$C"; then
-    lxc start "$C"
+    incus start "$C"
     sleep 3s
   fi
 
@@ -94,7 +93,7 @@ cmd_enter() {
     cmd_rebuild "$C"
   fi
 
-  lxc exec "$C" -- /run/current-system/sw/bin/bash
+  incus exec "$C" -- /run/current-system/sw/bin/bash
 }
 
 cmd_init() {
