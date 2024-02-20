@@ -14,5 +14,3 @@ Helpful tips:
 
   Old containers can be deleted with "lxc delete -f WORKTREE"
   You can see the whole list with "lxc ls"
-
-  Run "lnt update" from time to time

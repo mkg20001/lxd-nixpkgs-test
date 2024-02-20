@@ -33,7 +33,7 @@ cmd_create() {
 
   PRP="$NIXPKGS/$1"
 
-  lxc launch nixos "$1" -c security.nesting=true
+  lxc launch images:nixos/unstable "$1" -c security.nesting=true
   lxc config device add "$1" nixpkgs disk "source=$PRP" "path=/nix/var/nix/profiles/per-user/root/channels/nixpkgs"
   test -d "$PRP/config" || (cp -r "$SELF/inside" "$PRP/config" && chmod +w -R "$PRP/config")
   lxc config device add "$1" shared disk "source=$CONFIG/shared" "path=/etc/nixos/shared"
@@ -111,37 +111,6 @@ cmd_init() {
     echo "Creating shared config at $CONFIG/shared"
     cp -r "$SELF/shared" "$CONFIG/shared"
   fi
-
-  cmd_update
-}
-
-get_build() {
-  # it could happen that we fetch a different build for image and meta but usually that's rare and if it happens meta usually works regardless
-  BUILD=$(curl -s "https://hydra.nixos.org/job/nixos/trunk-combined/nixos.$1.x86_64-linux" | grep 'alt="Succeeded"' | head -n 1 | grep -o "https://[0-9a-z/.]*" | tail -n 1)
-  curl -s "$BUILD" | grep -o "$BUILD/download/[a-z0-9/._-]*" | head -n 1
-}
-
-dl() {
-  wget "$(get_build "$1")" -O "$2"
-}
-
-cmd_update() {
-  echo "Updating nixos image from hydra..."
-
-  TMP=$(mktemp -d)
-
-  cleanup() {
-    rm -rf "$TMP"
-  }
-
-  trap cleanup EXIT
-
-  pushd "$TMP"
-
-  dl lxdContainerImage image.tar.xz
-  dl lxdContainerMeta meta.tar.xz
-
-  lxc image import meta.tar.xz image.tar.xz --alias nixos
 }
 
 cmd_help() {
