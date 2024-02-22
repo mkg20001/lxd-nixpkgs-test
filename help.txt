@@ -4,7 +4,6 @@ Commands:
   enter <worktree> --[no-]-create --[no-]-rebuild Enter a container, creates it if it doesn't exist
   edit-shared                                     Edit shared config
   rebuild <worktree>                              Rebuild a container
-  update                                          Update nixos image from hydra
   help                                            Print this help page
 
 Helpful tips:
@@ -12,5 +11,5 @@ Helpful tips:
   gets automatically imported into all containers.
   Tweak it to your needs
 
-  Old containers can be deleted with "lxc delete -f WORKTREE"
-  You can see the whole list with "lxc ls"
+  Old containers can be deleted with "incus delete -f WORKTREE"
+  You can see the whole list with "incus ls"
